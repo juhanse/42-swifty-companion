@@ -1,22 +1,11 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
-import { Colors } from '@/constants/theme';
-import Entypo from '@expo/vector-icons/Entypo';
+import { Stack } from 'expo-router';
 
 export default function TabLayout() {
 	return (
-		<Tabs
-		screenOptions={{
-			tabBarActiveTintColor: Colors.tint,
-			headerShown: false,
-		}}>
-			<Tabs.Screen
-				name="index"
-				options={{
-				title: 'Home',
-					tabBarIcon: ({ color }) => <Entypo name="home" size={28} color="black" />,
-				}}
-			/>
-		</Tabs>
+		<Stack screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="index" />
+			<Stack.Screen name="[id]/index" />
+		</Stack>
 	);
 }
