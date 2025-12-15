@@ -24,7 +24,6 @@ export default function HomeScreen() {
 				placeholderTextColor="rgba(162,162,162,0.5)"
 				value={login || ''}
 				onChangeText={setLogin}
-				multiline={true}
 				autoCorrect={false}
 			/>
 
