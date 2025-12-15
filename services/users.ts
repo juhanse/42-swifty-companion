@@ -1,5 +1,16 @@
 import { api42 } from '@/services/api';
 
+export type Achievement = {
+	id: number,
+	name: string,
+	description: string,
+	tier: string,
+	kind: string,
+	visible: boolean,
+	image: string,
+	nbr_of_success: number,
+};
+
 export type User = {
 	id: string,
 	email: string,
@@ -10,7 +21,7 @@ export type User = {
 	displayname: string,
 	correction_point: number,
 	wallet: number,
-	achievements: {},
+	achievements: Achievement[],
 	titles: {},
 };
 
