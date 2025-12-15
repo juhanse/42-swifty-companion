@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import Button from '@/components/Button'
 
 export default function HomeScreen() {
 	const { t } = useTranslation();
@@ -28,7 +29,7 @@ export default function HomeScreen() {
 			/>
 
 			<View style={[styles.buttonContainer]}>
-				<Button type="primary" onPress={handlePress} disabled={!login || login.length < 3}>
+				<Button type="primary" onPress={() => handlePress(login!)} disabled={!login || login.length < 3}>
 					{t('search')}
 				</Button>
 			</View>
