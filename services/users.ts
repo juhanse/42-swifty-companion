@@ -1,4 +1,4 @@
-import api from '@/services/api';
+import { api42 } from '@/services/api';
 
 export type User = {
 	id: string,
@@ -14,7 +14,7 @@ export type User = {
 	titles: {},
 };
 
-export const fetchUser = async ({ username } : { username: string }): Promise<User> => {
-	const res = await api.get<User>('/users/' + username);
+export const fetchUser = async ({ login } : { login: string }): Promise<User> => {
+	const res = await api42.get<User>('/users/' + login);
 	return res.data;
 };
