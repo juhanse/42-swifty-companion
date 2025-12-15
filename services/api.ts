@@ -2,7 +2,7 @@ import axios from 'axios';
 import { tokenService } from '@/services/token';
 
 export const api42 = axios.create({
-	baseURL: 'https://api.intra.42.fr',
+	baseURL: 'https://api.intra.42.fr/v2',
 });
 
 api42.interceptors.request.use(async config => {
