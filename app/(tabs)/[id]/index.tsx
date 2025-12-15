@@ -14,15 +14,10 @@ export default function ProfileScreen() {
 		setLoading(true);
 
 		fetchUser({ login })
-		.then(response => {
-			setLoading(false);
-			setUser(response);
-		})
-		.catch(error => {
-			console.error('Oops! Error:', error);
-			setLoading(false);
-		});
-	});
+		.then(setUser)
+		.catch(console.error)
+		.finally(() => setLoading(false))
+	}, [login]);
 
 	if (loading) {
 		<ActivityIndicator size="large" color="#0000ff" />
@@ -34,7 +29,7 @@ export default function ProfileScreen() {
 				<Text>
 					{user?.displayname}
 				</Text>
-				<Image src={user?.url} style={styles.avatar}/>
+				<Image src={user?.image.link} style={styles.avatar}/>
 			</View>
 		</View>
 	);
