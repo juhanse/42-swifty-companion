@@ -1,19 +1,32 @@
-import { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Image, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { User, fetchUser } from '@/services/users'
 
 export default function ProfileScreen() {
+	const [loading, setLoading] = useState(false);
+	const [user, setUser] = useState<User | null>(null);
+
 	const { id } = useLocalSearchParams();
 	const login = id as string;
 
-	const [user, setUser] = useState<User | null>(null);
-
 	useEffect(() => {
+		setLoading(true);
+
 		fetchUser({ login })
-			.then(setUser)
-			.catch(console.error);
-	}, [fetchUser]);
+		.then(response => {
+			setLoading(false);
+			setUser(response);
+		})
+		.catch(error => {
+			console.error('Oops! Error:', error);
+			setLoading(false);
+		});
+	});
+
+	if (loading) {
+		<ActivityIndicator size="large" color="#0000ff" />
+	}
 
 	return (
 		<View style={styles.container}>
