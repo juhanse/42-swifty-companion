@@ -21,6 +21,9 @@ export type User = {
 	displayname: string,
 	correction_point: number,
 	wallet: number,
+	image: {
+		link: string
+	},
 	achievements: Achievement[],
 	titles: {},
 };
