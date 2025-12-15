@@ -13,7 +13,7 @@ export default function HomeScreen() {
 			return ;
 		}
 
-		router.push({ pathname: "/(tabs)/profile/[id]", params: { id: groupId } });
+		router.push({ pathname: "/(tabs)/[id]", params: { id: groupId } });
 	};
 
 	return (
