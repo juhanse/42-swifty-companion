@@ -24,6 +24,10 @@ export type User = {
 	image: {
 		link: string
 	},
+	groups: {
+		id: number,
+		name: string,
+	}[],
 	achievements: Achievement[],
 	titles: {},
 };
