@@ -61,7 +61,10 @@ export default function ProfileScreen() {
 			<View style={styles.header}>
 				<Image 
 					source={{ uri: user?.image.link }} 
-					style={styles.avatar}
+					style={[
+						styles.avatar,
+						user?.location && { borderWidth: 5, borderColor: '#fff' }
+					]}
 				/>
 				<View style={styles.subheader}>
 					<Text style={styles.username}>{user?.displayname}</Text>

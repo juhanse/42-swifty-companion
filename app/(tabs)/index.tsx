@@ -19,28 +19,24 @@ export default function HomeScreen() {
 
 	return (
 		<KeyboardAvoidingView
-			style={{ flex: 1 }}
+			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}
 		>
 			<Background />
 
-			<View style={styles.container}>
-				<TextInput
-					style={styles.input}
-					placeholder={t('search')}
-					placeholderTextColor="rgba(162,162,162,0.5)"
-					value={login || ''}
-					onChangeText={setLogin}
-					autoCorrect={false}
-				/>
-			</View>
+			<TextInput
+				style={styles.input}
+				placeholder={t('search')}
+				placeholderTextColor="rgba(162,162,162,0.5)"
+				value={login || ''}
+				onChangeText={setLogin}
+				autoCorrect={false}
+			/>
 
-			<View style={[styles.buttonContainer]}>
-				<Button type="primary" onPress={() => handlePress(login!)} disabled={!login || login.length < 3}>
-					{t('search')}
-				</Button>
-			</View>
+			<Button type="primary" onPress={() => handlePress(login!)} disabled={!login || login.length < 3}>
+				{t('search')}
+			</Button>
 		</KeyboardAvoidingView>
     );
 }
@@ -48,11 +44,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		flexDirection: 'column',
 		justifyContent: 'flex-start',
-		alignItems: 'center',
-		gap: 40,
-		paddingTop: 80,
-		paddingHorizontal: 40,
+		alignItems: 'stretch',
+		paddingTop: 100,
+		paddingBottom: 20,
+		paddingHorizontal: 20,
+		backgroundColor: 'transparent',
 	},
 	input: {
 		flex: 1,
@@ -61,11 +59,5 @@ const styles = StyleSheet.create({
 		fontFamily: 'SF-Semibold',
 		color: 'rgba(222, 222, 222, 0.8)',
 		backgroundColor: 'transparent',
-	},
-	buttonContainer: {
-		width: '100%',
-		flexDirection: 'column',
-		paddingHorizontal: 80,
-		paddingBottom: 40,
 	},
 });
