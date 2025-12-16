@@ -24,6 +24,7 @@ export type User = {
 	image: {
 		link: string
 	},
+	location: string,
 	groups: {
 		id: number,
 		name: string,
