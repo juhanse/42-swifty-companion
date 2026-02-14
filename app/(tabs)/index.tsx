@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, TextInput, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { TextInput, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Background } from '@/components/Background';
@@ -9,12 +9,12 @@ export default function HomeScreen() {
 	const { t } = useTranslation();
 	const [login, setLogin] = useState<string | null>(null);
 
-	const handlePress = (groupId: string) => {
-		if (groupId.length < 3) {
+	const handlePress = (loginID: string) => {
+		if (loginID.length < 3) {
 			return ;
 		}
 
-		router.push({ pathname: "/(tabs)/[id]", params: { id: groupId } });
+		router.push({ pathname: "/(tabs)/[id]", params: { id: loginID } });
 	};
 
 	return (
