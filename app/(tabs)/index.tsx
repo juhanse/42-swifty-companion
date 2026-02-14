@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { TextInput, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Background } from '@/components/Background';
+import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/Button'
 
 export default function HomeScreen() {
@@ -18,13 +18,12 @@ export default function HomeScreen() {
 	};
 
 	return (
+		<ScreenWrapper>
 		<KeyboardAvoidingView
 			style={styles.container}
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}
 		>
-			<Background />
-
 			<TextInput
 				style={styles.input}
 				placeholder={t('search')}
@@ -38,6 +37,7 @@ export default function HomeScreen() {
 				{t('search')}
 			</Button>
 		</KeyboardAvoidingView>
+		</ScreenWrapper>
     );
 }
 

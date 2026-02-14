@@ -4,23 +4,9 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Haptics from 'expo-haptics';
-import { User, Achievement, fetchUser } from '@/services/users'
-import { Background } from '@/components/Background';
+import { User, fetchUser } from '@/services/users'
+import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/Button';
-
-const AchievementItem: React.FC<{ achievement: Achievement }> = ({ achievement }) => (
-	<View style={styles.achievementCard}>
-		{achievement.image && (
-			<Image source={{ uri: achievement.image }} style={styles.achievementIcon} />
-		)}
-		<View style={styles.achievementContent}>
-			<Text style={styles.achievementTitle}>{achievement.name}</Text>
-			{achievement.description && (
-				<Text style={styles.achievementDescription}>{achievement.description}</Text>
-			)}
-		</View>
-	</View>
-);
 
 export default function ProfileScreen() {
 	const { t } = useTranslation();
@@ -48,11 +34,9 @@ export default function ProfileScreen() {
 		Linking.openURL("https://intra.42.fr/users/" + login);
 	};
 
-	const achievements: Achievement[] = user?.achievements || [];
-
 	return (
+		<ScreenWrapper>
 		<View style={styles.container}>
-			<Background />
 
 			<Pressable onPress={() => router.back()} style={styles.backButton}>
 				<Ionicons name="arrow-back-outline" size={24} color="black" />
@@ -63,7 +47,7 @@ export default function ProfileScreen() {
 					source={{ uri: user?.image.link }} 
 					style={[
 						styles.avatar,
-						user?.location && { borderWidth: 5, borderColor: '#fff' }
+						user?.url && { borderWidth: 5, borderColor: '#fff' }
 					]}
 				/>
 				<View style={styles.subheader}>
@@ -76,29 +60,11 @@ export default function ProfileScreen() {
 				</View>
 			</View>
 
-			<Text style={styles.sectionTitle}>
-				{t('achievements')} :
-			</Text>
-
-			<ScrollView 
-				horizontal 
-				showsHorizontalScrollIndicator={false}
-				style={styles.achievementsScroll}
-				contentContainerStyle={styles.achievementsContent}
-			>
-				{achievements.length > 0 ? (
-					achievements.map((achievement) => (
-						<AchievementItem key={achievement.id} achievement={achievement} />
-					))
-				) : (
-					<Text style={styles.noAchievements}>No achievements yet</Text>
-				)}
-			</ScrollView>
-
 			<Button type="primary" onPress={handleOpenProfile}>
 				{t('open_profile')}
 			</Button>
 		</View>
+		</ScreenWrapper>
 	);
 }
 
