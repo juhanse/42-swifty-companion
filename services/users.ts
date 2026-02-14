@@ -23,10 +23,15 @@ export type User = {
 	image: {
 		link: string
 	},
+	correction_point: number,
 	wallet: number,
 	groups: {
 		id: number,
 		name: string,
+	}[],
+	cursus_users: {
+		grade: string,
+		level: number,
 	}[],
 	projects_users: ProjectsUser[]
 };
