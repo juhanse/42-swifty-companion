@@ -1,14 +1,15 @@
 import { api42 } from '@/services/api';
 
-export type Achievement = {
+export type ProjectsUser = {
 	id: number,
-	name: string,
-	description: string,
-	tier: string,
-	kind: string,
-	visible: boolean,
-	image: string,
-	nbr_of_success: number,
+	final_mark: number,
+	validated: boolean,
+	current_team_id: number,
+	project: {
+		id: number,
+		name: string,
+	},
+	updated_at: string
 };
 
 export type User = {
@@ -19,18 +20,15 @@ export type User = {
 	last_name: string,
 	url: string,
 	displayname: string,
-	correction_point: number,
-	wallet: number,
 	image: {
 		link: string
 	},
-	location: string,
+	wallet: number,
 	groups: {
 		id: number,
 		name: string,
 	}[],
-	achievements: Achievement[],
-	titles: {},
+	projects_users: ProjectsUser[]
 };
 
 export const fetchUser = async ({ login } : { login: string }): Promise<User> => {
