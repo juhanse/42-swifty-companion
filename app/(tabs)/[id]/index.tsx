@@ -1,190 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, Text, ActivityIndicator, StyleSheet, ScrollView, Linking, Pressable } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { View, ActivityIndicator, StyleSheet, Linking } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Haptics from 'expo-haptics';
-import { User, fetchUser } from '@/services/users'
+import { fetchUser } from '@/services/users'
 import { ScreenWrapper } from '@/components/ScreenWrapper';
-import Button from '@/components/Button';
+import Button from '@/components/ui/Button';
+import { Header } from '@/components/Header';
+import { useQuery } from '@tanstack/react-query';
+import { Level } from '@/components/Level';
 
 export default function ProfileScreen() {
-	const { t } = useTranslation();
-	const { id } = useLocalSearchParams();
-	const login = id as string;
+    const { t } = useTranslation();
+    const { id } = useLocalSearchParams<{ id: string }>();
 
-	const [loading, setLoading] = useState(false);
-	const [user, setUser] = useState<User | null>(null);
+    const { data: user, isLoading } = useQuery({
+        queryKey: ['userSearch', id.toLowerCase()],
+        queryFn: () => fetchUser({ login: id.toLowerCase() }),
+        staleTime: 1000 * 60 * 5,
+    });
 
-	useEffect(() => {
-		setLoading(true);
+    const handleOpenIntra = async () => {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        const url = `https://intra.42.fr/users/${id}`;
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+            await Linking.openURL(url);
+        }
+    };
 
-		fetchUser({ login })
-		.then(setUser)
-		.catch(console.error)
-		.finally(() => setLoading(false))
-	}, [login]);
+    if (isLoading) {
+        return (
+            <ScreenWrapper>
+                <View style={styles.center}>
+                    <ActivityIndicator size="large" color="#FFFFFF" />
+                </View>
+            </ScreenWrapper>
+        );
+    }
 
-	if (loading) {
-		return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
-	}
+    return (
+        <ScreenWrapper>
+            <View style={styles.container}>
+                <View style={styles.mainContent}>
+                    <Header user={user || null} />
+                    <Level user={user || null} />
+                </View>
 
-	const handleOpenProfile = () => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-		Linking.openURL("https://intra.42.fr/users/" + login);
-	};
-
-	return (
-		<ScreenWrapper>
-		<View style={styles.container}>
-
-			<Pressable onPress={() => router.back()} style={styles.backButton}>
-				<Ionicons name="arrow-back-outline" size={24} color="black" />
-			</Pressable>
-
-			<View style={styles.header}>
-				<Image 
-					source={{ uri: user?.image.link }} 
-					style={[
-						styles.avatar,
-						user?.url && { borderWidth: 5, borderColor: '#fff' }
-					]}
-				/>
-				<View style={styles.subheader}>
-					<Text style={styles.username}>{user?.displayname}</Text>
-					{user?.groups[0] ? (
-						<Text style={styles.badge}>{user?.groups[0].name}</Text>
-					) :
-						null
-					}
-				</View>
-			</View>
-
-			<Button type="primary" onPress={handleOpenProfile}>
-				{t('open_profile')}
-			</Button>
-		</View>
-		</ScreenWrapper>
-	);
+				<Button type="primary" onPress={handleOpenIntra}>
+					{t('open_profile')}
+				</Button>
+            </View>
+        </ScreenWrapper>
+    );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		flexDirection: 'column',
-		justifyContent: 'flex-start',
-		alignItems: 'stretch',
-		paddingTop: 100,
-		paddingBottom: 20,
-		paddingHorizontal: 20,
-		backgroundColor: 'transparent',
-	},
-	loader: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	backButton: {
-		position: 'absolute',
-		top: 40,
-		left: 20,
-		zIndex: 10,
-		padding: 10,
-		backgroundColor: 'rgba(255, 255, 255, 0.3)',
-		borderRadius: 30,
-	},
-	header: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		paddingBottom: 20,
-		gap: 20,
-	},
-	avatar: {
-		width: 100,
-		height: 100,
-		borderRadius: 50,
-		backgroundColor: '#e0e0e0',
-	},
-	username: {
-		flex: 1,
-		fontSize: 30,
-		fontFamily: 'SF-Bold',
-		color: '#fff',
-	},
-	subheader: {
-		flex: 1,
-		flexDirection: 'column',
-		alignItems: 'flex-start',
-	},
-	badge: {
-		fontSize: 14,
-		fontFamily: 'SF-Medium',
-		color: '#fff',
-		backgroundColor: 'rgba(22, 134, 214, 0.8)',
-		paddingHorizontal: 20,
-		paddingVertical: 8,
-		borderRadius: 20,
-		overflow: 'hidden',
-	},
-	sectionTitle: {
-		fontSize: 20,
-		fontFamily: 'SF-Semibold',
-		color: '#fff',
-		paddingVertical: 16,
-	},
-	achievementsScroll: {
-		flex: 1,
-	},
-	achievementsContent: {
-		paddingVertical: 8,
-		gap: 12,
-	},
-	achievementCard: {
-		width: 160,
-		height: 200,
-		backgroundColor: 'rgba(255, 255, 255, 0.7)',
-		borderRadius: 16,
-		padding: 14,
-		borderWidth: 1,
-		borderColor: 'rgba(255, 255, 255, 0.5)',
-		justifyContent: 'flex-start',
-		alignItems: 'center',
-		overflow: 'hidden',
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.08,
-		shadowRadius: 12,
-		elevation: 5,
-	},
-	achievementIcon: {
-		width: 60,
-		height: 60,
-		borderRadius: 12,
-		marginBottom: 10,
-		backgroundColor: '#e0e0e0',
-	},
-	achievementContent: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	achievementTitle: {
-		fontSize: 14,
-		fontWeight: '600',
-		color: '#333',
-		textAlign: 'center',
-	},
-	achievementDescription: {
-		fontSize: 12,
-		color: '#666',
-		marginTop: 6,
-		textAlign: 'center',
-	},
-	noAchievements: {
-		fontSize: 14,
-		color: '#999',
-		textAlign: 'center',
-		paddingVertical: 20,
-		alignSelf: 'center',
-	},
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        paddingTop: 60,
+        paddingBottom: 40,
+        paddingHorizontal: 20,
+    },
+    mainContent: {
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        gap: 20,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
