@@ -1,42 +1,80 @@
 import React, { useState } from 'react'
-import { TextInput, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { View, KeyboardAvoidingView, Text, TextInput, Platform, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ScreenWrapper } from '@/components/ScreenWrapper';
-import Button from '@/components/Button'
+import Button from '@/components/ui/Button'
+import { useQuery } from '@tanstack/react-query';
+import { fetchUser } from '@/services/users';
 
 export default function HomeScreen() {
+	const router = useRouter();
 	const { t } = useTranslation();
-	const [login, setLogin] = useState<string | null>(null);
+	const [login, setLogin] = useState<string>('');
 
-	const handlePress = (loginID: string) => {
-		if (loginID.length < 3) {
-			return ;
-		}
+	const { refetch, isFetching, isError, error } = useQuery({
+		queryKey: ['userSearch', login.trim().toLowerCase()],
+		queryFn: () => fetchUser({ login: login.trim().toLowerCase() }),
+		enabled: false,
+		retry: false,
+	});
 
-		router.push({ pathname: "/(tabs)/[id]", params: { id: loginID } });
-	};
+    const handleSearch = async () => {
+        const cleanLogin = login.trim().toLowerCase();
+        if (cleanLogin.length < 3) return;
+
+        const { data, isSuccess } = await refetch();
+
+        if (isSuccess && data) {
+            router.push({ 
+                pathname: "/(tabs)/[id]", 
+                params: { id: data.login } 
+            });
+        }
+    };
 
 	return (
 		<ScreenWrapper>
-		<KeyboardAvoidingView
-			style={styles.container}
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}
-		>
-			<TextInput
-				style={styles.input}
-				placeholder={t('search')}
-				placeholderTextColor="rgba(162,162,162,0.5)"
-				value={login || ''}
-				onChangeText={setLogin}
-				autoCorrect={false}
-			/>
+			<KeyboardAvoidingView
+				style={styles.container}
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}
+			>
+				<View style={{ flex: 1 }} />
 
-			<Button type="primary" onPress={() => handlePress(login!)} disabled={!login || login.length < 3}>
-				{t('search')}
-			</Button>
-		</KeyboardAvoidingView>
+				<View style={{ gap: 12 }}>
+					<Text style={styles.title}>
+						Identifiant :
+					</Text>
+					<View style={styles.textAera}>
+						<View style={styles.line} />
+						<TextInput
+							style={styles.input}
+							placeholder={t('search')}
+							placeholderTextColor="rgba(162,162,162,0.5)"
+							value={login || ''}
+							onChangeText={setLogin}
+							autoCorrect={false}
+						/>
+					</View>
+				</View>
+
+				<View style={{ flex: 1 }} />
+
+				{isError && (
+					<Text style={styles.errorText}>
+						{(error as any)?.response?.status === 404 
+							? t('user_not_found') 
+							: t('api_error')}
+					</Text>
+				)}
+
+				<View style={{ marginBottom: 30 }}>
+					<Button type="primary" onPress={handleSearch} disabled={!login || login.length < 3} pending={isFetching}>
+						{t('search')}
+					</Button>
+				</View>
+			</KeyboardAvoidingView>
 		</ScreenWrapper>
     );
 }
@@ -44,20 +82,37 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		flexDirection: 'column',
-		justifyContent: 'flex-start',
-		alignItems: 'stretch',
-		paddingTop: 100,
-		paddingBottom: 20,
-		paddingHorizontal: 20,
+        justifyContent: 'space-between', 
+        paddingHorizontal: 20,
+        paddingBottom: Platform.OS === 'ios' ? 40 : 20,
 		backgroundColor: 'transparent',
 	},
+	textAera: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 12,
+		backgroundColor: "transparent",
+	},
+	title: {
+		fontFamily: 'SF-Semibold',
+		fontSize: 32,
+		color: '#fff',
+	},
+	line: {
+		width: 4,
+		height: 55,
+		backgroundColor: '#fff',
+	},
 	input: {
-		flex: 1,
 		height: 50,
 		fontSize: 32,
 		fontFamily: 'SF-Semibold',
-		color: 'rgba(222, 222, 222, 0.8)',
+		color: 'rgba(162, 162, 162, 0.8)',
 		backgroundColor: 'transparent',
 	},
+	errorText: {
+		fontSize: 20,
+        fontFamily: "SF-Medium",
+        color: '#FF4B4B',
+    },
 });
