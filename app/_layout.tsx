@@ -2,6 +2,9 @@ import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/hooks/useTranslation';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const InitialLayout = () => {
 	return (
@@ -23,8 +26,10 @@ export default function RootLayout() {
 	}
 
 	return (
-		<I18nextProvider i18n={i18n}>
-			<InitialLayout />
-		</I18nextProvider>
+		<QueryClientProvider client={queryClient}>			
+			<I18nextProvider i18n={i18n}>
+				<InitialLayout />
+			</I18nextProvider>
+		</QueryClientProvider>
 	)
 }
