@@ -6,6 +6,7 @@ import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/ui/Button'
 import { useQuery } from '@tanstack/react-query';
 import { fetchUser } from '@/services/users';
+import { Colors } from '@/constants/colors';
 
 export default function HomeScreen() {
 	const router = useRouter();
@@ -113,6 +114,6 @@ const styles = StyleSheet.create({
 	errorText: {
 		fontSize: 20,
         fontFamily: "SF-Medium",
-        color: '#FF4B4B',
+        color: Colors.red,
     },
 });
