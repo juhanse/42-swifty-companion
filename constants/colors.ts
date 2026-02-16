@@ -1,6 +1,7 @@
 export const Colors = {
 	white: '#fff',
 	black: '#000',
+	red: '#CA5A5A',
 	badge: {
 		["Tutor"]: '#0078FF',
 		["Supervising Tutor"]: '#6000BC',
