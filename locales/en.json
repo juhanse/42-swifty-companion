@@ -2,5 +2,7 @@
 	"hello": "Hello",
 	"search": "Search",
 	"achievements": "Achievements",
-	"open_profile": "Open intranet"
+	"open_profile": "Open intranet",
+	"user_not_found": "User not found",
+	"api_error": "API Error"
 }
