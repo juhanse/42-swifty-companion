@@ -48,13 +48,11 @@ const styles = StyleSheet.create({
 	levelText: {
 		fontSize: 20,
 		fontFamily: "SF-Bold",
-		fontWeight: '700',
 		color: '#fff',
 	},
 	walletText: {
 		fontSize: 20,
 		fontFamily: "SF-Bold",
-		fontWeight: '700',
 		color: '#fff',
 	},
 	progressBarBackground: {
