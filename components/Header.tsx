@@ -3,6 +3,7 @@ import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { User } from '@/services/users';
+import { Badge } from './ui/Badge';
 
 interface HeaderProps {
 	user: User | null;
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export const Header = ({ user }: HeaderProps) => {
 	const router = useRouter();
+	const primaryGroup = user?.groups?.[0]?.name;
 
 	return (
 		<View>
@@ -40,9 +42,11 @@ export const Header = ({ user }: HeaderProps) => {
 					</View>
 
 					<View style={styles.metaRow}>
-						{ user?.groups[0]?.name && (
-							<Text>{user?.groups[0]?.name}</Text>
-						) || <Text /> }
+						{primaryGroup ? (
+                            <Badge label={primaryGroup} />
+                        ) : (
+                            <View />
+                        )}
 						<Text style={styles.points}>
 							{user?.correction_point} Ev.P
 						</Text>
