@@ -1,4 +1,4 @@
-import { View, ActivityIndicator, StyleSheet, Linking } from 'react-native';
+import { View, ActivityIndicator, Linking, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button';
 import { Header } from '@/components/Header';
 import { useQuery } from '@tanstack/react-query';
 import { Level } from '@/components/Level';
+import { Projects } from '@/components/Projects';
 
 export default function ProfileScreen() {
     const { t } = useTranslation();
@@ -32,7 +33,7 @@ export default function ProfileScreen() {
         return (
             <ScreenWrapper>
                 <View style={styles.center}>
-                    <ActivityIndicator size="large" color="#FFFFFF" />
+                    <ActivityIndicator size="large" color="#fff" />
                 </View>
             </ScreenWrapper>
         );
@@ -44,6 +45,7 @@ export default function ProfileScreen() {
                 <View style={styles.mainContent}>
                     <Header user={user || null} />
                     <Level user={user || null} />
+                    <Projects projects={user?.projects_users || []} />
                 </View>
 
 				<Button type="primary" onPress={handleOpenIntra}>
