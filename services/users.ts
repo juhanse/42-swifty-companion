@@ -1,16 +1,5 @@
 import { api42 } from '@/services/api';
-
-export type ProjectsUser = {
-	id: number,
-	final_mark: number,
-	validated: boolean,
-	current_team_id: number,
-	project: {
-		id: number,
-		name: string,
-	},
-	updated_at: string
-};
+import { ProjectUser } from '@/services/projects';
 
 export type User = {
 	id: string,
@@ -33,7 +22,7 @@ export type User = {
 		grade: string,
 		level: number,
 	}[],
-	projects_users: ProjectsUser[]
+	projects_users: ProjectUser[]
 };
 
 export const fetchUser = async ({ login } : { login: string }): Promise<User> => {
