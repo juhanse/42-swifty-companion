@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# Swifty Companion 📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## 📝 Project Overview
 
-## Get started
+**Swifty Companion** is a mobile application developed as part of the 42 school curriculum. The goal is to build an interface that retrieves and displays detailed information about 42 students using the **42 API**. The app focuses on seamless navigation, real-time data fetching, and a modern UI that adapts to various screen sizes.
 
-1. Install dependencies
+## 🛠 Tech Stack
 
-   ```bash
-   npm install
-   ```
+* **Framework:** React Native with Expo (SDK 54+).
+* **Language:** TypeScript (Strongly Typed).
+* **Navigation:** Expo Router (File-based routing).
+* **Data Fetching:** TanStack Query (Caching and server-state management).
+* **API Client:** Axios with centralized OAuth2 token management.
 
-2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+## 🚀 Technical Notions Applied
 
-In the output, you'll find options to open the app in a
+* **OAuth2 Authentication:** Implementation of the `client_credentials` flow to communicate securely with the 42 API.
+* **Atomic Architecture:** Breakdown of the UI into reusable components (Badge, Level, ProjectCard, etc.).
+* **State & Cache Management:** Optimized performance and reduced API calls using TanStack Query.
+* **Responsive Design:** Flexible layouts ensuring the interface displays correctly on different mobile platforms.
+* **Error Handling:** Comprehensive management of edge cases, including "login not found," network issues, and API rate limits.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
+## 🎨 Design & Prototyping
 
-When you're ready, run:
+The application was fully designed in **Figma** prior to development to ensure visual consistency and an optimal user experience.
 
-```bash
-npm run reset-project
-```
+<img src="https://imgur.com/HRUyS6Z.png" alt="view1" height="400">
+<img src="https://imgur.com/MQ3wdp4.png" alt="view2" height="400">
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+## 📋 Mandatory Part
 
-To learn more about developing your project with Expo, look at the following resources:
+* **Student Search:** Search for any 42 user by their login.
+* **User Details:** Display of at least four key details: Login, Email, Correction Points, Wallet, and Profile Picture.
+* **Skills Visualization:** Display of user skills with levels and percentage bars.
+* **Project History:** List of all completed projects, including successful and failed ones.
+* **Navigation:** Ability to navigate back to the search view at any time.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
+## 🌟 Bonus
 
-Join our community of developers creating universal apps.
+**Token Auto-Refresh:** The application automatically recreates the token upon expiration, ensuring uninterrupted service.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## 💻 Installation
+
+1. Clone the repository: `git clone https://github.com/juhanse/42-swifty-companion`
+2. Install dependencies: `npx expo install`
+3. Set up your `.env` file with your 42 API `UID` and `SECRET`.
+4. Start the project: `npx expo start`
+
+In compliance with the subject's security requirements, all credentials and API keys are stored locally in an `.env` file and ignored by Git.
