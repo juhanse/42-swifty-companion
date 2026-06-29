@@ -21,11 +21,16 @@ export type User = {
 	cursus_users: {
 		grade: string,
 		level: number,
+		skills: {
+			id: number,
+			name: string,
+			level: number
+		}[]
 	}[],
 	projects_users: ProjectUser[]
 };
 
-export const fetchUser = async ({ login } : { login: string }): Promise<User> => {
+export const fetchUser = async ({ login }: { login: string }): Promise<User> => {
 	const res = await api42.get(`/users/${login}`);
 	return res.data;
 };
