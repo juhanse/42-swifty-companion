@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fetchTeamUsers, ProjectUser, TeamUser } from '@/services/projects';
+import { ProjectUser } from '@/services/users';
 import { Colors } from '@/constants/colors';
 
 interface ProjectCardProps {
@@ -9,33 +8,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ projectUser }: ProjectCardProps) => {
-    const [teamUsers, setTeamUsers] = useState<TeamUser[] | null>(null);
     const isSuccess = projectUser["validated?"];
-
-    useEffect(() => {
-        let isMounted = true;
-
-        const loadTeam = async () => {
-            if (projectUser.current_team_id) {
-                try {
-                    const data = await fetchTeamUsers({ id: projectUser.current_team_id });
-                    if (isMounted) {
-                        setTeamUsers(data);
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-        };
-
-        loadTeam();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [projectUser.current_team_id]);
-
-    const isGroupProject = teamUsers && teamUsers.length > 1;
 
     const formattedDate = new Date(projectUser.marked_at).toLocaleDateString('fr-FR', {
         day: '2-digit',
@@ -56,21 +29,6 @@ export const ProjectCard = ({ projectUser }: ProjectCardProps) => {
                     </Text>
                     {isSuccess && <Text style={styles.date}>{formattedDate}</Text>}
                 </View>
-
-                {isGroupProject && (
-                    <View style={styles.groupContainer}>
-                        {teamUsers.map((user, index) => (
-                            <Image
-                                key={user.id}
-                                source={{ uri: user.image.link }}
-                                style={[
-                                    styles.avatar,
-                                    { zIndex: 10 - index, marginLeft: index === 0 ? 0 : -10 }
-                                ]}
-                            />
-                        ))}
-                    </View>
-                )}
             </View>
         </>
     );

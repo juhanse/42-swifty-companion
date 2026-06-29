@@ -9,7 +9,7 @@ export const Colors = {
 		["STAFF"]: '#E05757',
 		["BDE"]: '#2E657C',
 		["Phoenix"]: '#F99E3B',
-		["Pegasus"]: '#0F172A',
+		["PEGASUS"]: '#0F172A',
 		["Prefect"]: '#DD2B84',
 		["Test account"]: '#D63031',
 		["alumni"]: '#00BAC4',

@@ -18,13 +18,13 @@ export const Badge = ({ label }: BadgeProps) => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingVertical: 5,
+        paddingVertical: 8,
         borderRadius: 16,
         alignSelf: 'flex-start',
     },
     text: {
         color: Colors.white,
         fontSize: 18,
-        fontFamily: "SF-Medium",
+        fontFamily: "SF-Bold",
     },
 });

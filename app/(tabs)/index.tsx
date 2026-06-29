@@ -56,7 +56,12 @@ export default function HomeScreen() {
 							placeholder="Search"
 							placeholderTextColor="rgba(162,162,162,0.5)"
 							value={login || ''}
-							onChangeText={setLogin}
+							onChangeText={(text) => {
+								setLogin(text);
+								if (errorState.hasError) {
+									setErrorState({ hasError: false });
+								}
+							}}
 							autoCorrect={false}
 						/>
 					</View>
@@ -64,17 +69,16 @@ export default function HomeScreen() {
 
 				<View style={{ flex: 1 }} />
 
-				{errorState.hasError && (
-					<Text style={styles.errorText}>
-						{errorState.status === 404
-							? 'User not found'
-							: 'API error'}
-					</Text>
-				)}
-
 				<View style={{ marginBottom: 30 }}>
-					<Button type="primary" onPress={handleSearch} disabled={!login || login.length < 3} pending={isFetching}>
-						Search
+					<Button
+						type={errorState.hasError ? "warning" : "primary"}
+						onPress={handleSearch}
+						disabled={!login || login.length < 3}
+						pending={isFetching}
+					>
+						{errorState.hasError
+							? (errorState.status === 404 ? 'User not found' : 'Error API')
+							: 'Search'}
 					</Button>
 				</View>
 			</KeyboardAvoidingView>

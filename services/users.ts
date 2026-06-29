@@ -1,5 +1,17 @@
 import { api42 } from '@/services/api';
-import { ProjectUser } from '@/services/projects';
+
+export interface ProjectUser {
+	id: number;
+	final_mark: number;
+	status: string;
+	"validated?": boolean;
+	current_team_id: number;
+	marked_at: string;
+	project: {
+		name: string;
+		slug: string;
+	};
+};
 
 export type User = {
 	id: string,

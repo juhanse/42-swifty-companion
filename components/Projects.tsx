@@ -1,6 +1,6 @@
 import { FlatList, View, StyleSheet, Text } from 'react-native';
 import { ProjectCard } from '@/components/ui/ProjectCard';
-import { ProjectUser } from '@/services/projects';
+import { ProjectUser } from '@/services/users';
 
 interface ProjectsProps {
     projects: ProjectUser[];
