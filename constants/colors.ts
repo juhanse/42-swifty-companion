@@ -2,6 +2,7 @@ export const Colors = {
 	white: '#fff',
 	black: '#000',
 	red: '#CA5A5A',
+	gradient: ['#ACCB6F', '#97D581'] as const,
 	badge: {
 		["Tutor"]: '#0078FF',
 		["Supervising Tutor"]: '#6000BC',
