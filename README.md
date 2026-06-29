@@ -6,9 +6,8 @@
 
 ## 🛠 Tech Stack
 
-* **Framework:** React Native with Expo (SDK 54+)
-* **Language:** TypeScript (Strongly Typed)
-* **Navigation:** Expo Router (File-based routing)
+* **Framework:** React Native with Expo 56
+* **Language:** TypeScript
 * **Data Fetching:** TanStack Query (Caching and server-state management)
 * **API Client:** Axios with centralized OAuth2 token management
 
@@ -51,7 +50,7 @@ The application was fully designed in **Figma** prior to development to ensure v
 
 1. Clone the repository: `git clone https://github.com/juhanse/42-swifty-companion`
 2. Install dependencies: `npx expo install`
-3. Set up your `.env` file with your 42 API `UID` and `SECRET`
+3. Set up your `.env` file with your 42 API `UID` and `SECRET`, as shown in the `.env.example` file
 4. Start the project: `npx expo start`
 
 In compliance with the subject's security requirements, all credentials and API keys are stored locally in an `.env` file and ignored by Git.
