@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fetchTeamUsers, ProjectUser } from '@/services/projects';
+import { fetchTeamUsers, ProjectUser, TeamUser } from '@/services/projects';
 import { Colors } from '@/constants/colors';
 
 interface ProjectCardProps {
@@ -10,32 +9,71 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ projectUser }: ProjectCardProps) => {
+    const [teamUsers, setTeamUsers] = useState<TeamUser[] | null>(null);
     const isSuccess = projectUser["validated?"];
-    
-    const { data: teamUsers } = useQuery({
-        queryKey: ['team', projectUser.current_team_id],
-        queryFn: () => fetchTeamUsers({ id: projectUser.current_team_id }),
-        staleTime: 1000 * 60 * 30,
-        enabled: !!projectUser.current_team_id,
-    });
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadTeam = async () => {
+            if (projectUser.current_team_id) {
+                try {
+                    const data = await fetchTeamUsers({ id: projectUser.current_team_id });
+                    if (isMounted) {
+                        setTeamUsers(data);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        };
+
+        loadTeam();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [projectUser.current_team_id]);
 
     const isGroupProject = teamUsers && teamUsers.length > 1;
-    
+
     const formattedDate = new Date(projectUser.marked_at).toLocaleDateString('fr-FR', {
         day: '2-digit',
         month: '2-digit',
         year: '2-digit'
     });
 
-    const BackgroundComponent = isSuccess ? LinearGradient : View;
-    const backgroundProps = isSuccess ? {
-        colors: ['#8CD270', '#B0CB7C', '#80B2B3'],
-        locations: [0, 0.5, 1],
-        start: { x: 0, y: 0 },
-        end: { x: 1, y: 1 }
-    } : {
-        style: { backgroundColor: '#000000' }
-    };
+    const cardContent = (
+        <>
+            <Text style={[styles.mark, !isSuccess && { color: Colors.badge.STAFF }]}>
+                {projectUser.final_mark}
+            </Text>
+
+            <View style={styles.infoFrame}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title} numberOfLines={1}>
+                        {projectUser.project.name}
+                    </Text>
+                    {isSuccess && <Text style={styles.date}>{formattedDate}</Text>}
+                </View>
+
+                {isGroupProject && (
+                    <View style={styles.groupContainer}>
+                        {teamUsers.map((user, index) => (
+                            <Image
+                                key={user.id}
+                                source={{ uri: user.image.link }}
+                                style={[
+                                    styles.avatar,
+                                    { zIndex: 10 - index, marginLeft: index === 0 ? 0 : -10 }
+                                ]}
+                            />
+                        ))}
+                    </View>
+                )}
+            </View>
+        </>
+    );
 
     return (
         <View style={styles.outerContainer}>
@@ -46,38 +84,20 @@ export const ProjectCard = ({ projectUser }: ProjectCardProps) => {
                 style={styles.borderWrapper}
             >
                 <View style={styles.innerContainer}>
-                    {/* @ts-ignore - Le typage dynamique entre View et LinearGradient peut être strict */}
-                    <BackgroundComponent {...backgroundProps} style={[styles.cardBase, backgroundProps.style]}>
-                        
-                        <Text style={[styles.mark, !isSuccess && { color: Colors.badge.STAFF }]}>
-                            {projectUser.final_mark}
-                        </Text>
-                        
-                        <View style={styles.infoFrame}>
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.title} numberOfLines={1}>
-                                    {projectUser.project.name}
-                                </Text>
-                                {isSuccess && <Text style={styles.date}>{formattedDate}</Text>}
-                            </View>
-
-                            {isGroupProject && (
-                                <View style={styles.groupContainer}>
-                                    {teamUsers.map((user, index) => (
-                                        <Image 
-                                            key={user.id}
-                                            source={{ uri: user.image.link }}
-                                            style={[
-                                                styles.avatar, 
-                                                { zIndex: 10 - index, marginLeft: index === 0 ? 0 : -10 }
-                                            ]}
-                                        />
-                                    ))}
-                                </View>
-                            )}
+                    {isSuccess ? (
+                        <LinearGradient
+                            colors={Colors.gradient}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.cardBase}
+                        >
+                            {cardContent}
+                        </LinearGradient>
+                    ) : (
+                        <View style={[styles.cardBase, { backgroundColor: '#000000' }]}>
+                            {cardContent}
                         </View>
-
-                    </BackgroundComponent>
+                    )}
                 </View>
             </LinearGradient>
         </View>
