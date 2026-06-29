@@ -1,4 +1,3 @@
-import React from 'react';
 import { FlatList, View, StyleSheet, Text } from 'react-native';
 import { ProjectCard } from '@/components/ui/ProjectCard';
 import { ProjectUser } from '@/services/projects';
@@ -14,7 +13,7 @@ export const Projects = ({ projects }: ProjectsProps) => {
 
     return (
         <View style={styles.wrapper}>
-			<Text style={styles.title}>Projets :</Text>
+            <Text style={styles.title}>Projets :</Text>
             <FlatList
                 data={finishedProjects}
                 horizontal
@@ -33,14 +32,14 @@ export const Projects = ({ projects }: ProjectsProps) => {
 
 const styles = StyleSheet.create({
     wrapper: {
-		paddingVertical: 20,
+        paddingVertical: 20,
     },
-	title: {
-		fontSize: 20,
-		fontFamily: "SF-Bold",
-		color: "#fff",
-		marginBottom: 10,
-	},
+    title: {
+        fontSize: 24,
+        fontFamily: "SF-Bold",
+        color: "#fff",
+        marginBottom: 10,
+    },
     listContent: {
         gap: 10,
     },

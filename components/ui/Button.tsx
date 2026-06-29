@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Pressable, Text, ViewStyle, TextStyle, StyleSheet, ActivityIndicator } from "react-native";
 
 type ButtonType = "primary" | "secondary" | "warning";
@@ -13,7 +13,15 @@ interface ButtonProps {
 	pending?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ type = "primary", onPress, children, style, textStyle, disabled = false, pending = false }) => {
+const Button = ({
+	type = "primary",
+	onPress,
+	children,
+	style,
+	textStyle,
+	disabled = false,
+	pending = false
+}: ButtonProps) => {
 	const getBackgroundColor = (pressed: boolean) => {
 		switch (type) {
 			case "secondary":

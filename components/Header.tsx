@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -15,8 +14,8 @@ export const Header = ({ user }: HeaderProps) => {
 
 	return (
 		<View>
-			<Pressable 
-				onPress={() => router.back()} 
+			<Pressable
+				onPress={() => router.back()}
 				style={({ pressed }) => [
 					styles.backButton,
 					{ opacity: pressed ? 0.7 : 1 }
@@ -26,11 +25,11 @@ export const Header = ({ user }: HeaderProps) => {
 			</Pressable>
 
 			<View style={styles.container}>
-				<Image 
-					source={{ uri: user?.image.link }} 
+				<Image
+					source={{ uri: user?.image.link }}
 					style={styles.avatar}
 				/>
-				
+
 				<View style={styles.subContainer}>
 					<View style={styles.nameContainer}>
 						<Text style={styles.displayname} numberOfLines={1}>
@@ -43,10 +42,10 @@ export const Header = ({ user }: HeaderProps) => {
 
 					<View style={styles.metaRow}>
 						{primaryGroup ? (
-                            <Badge label={primaryGroup} />
-                        ) : (
-                            <View />
-                        )}
+							<Badge label={primaryGroup} />
+						) : (
+							<View />
+						)}
 						<Text style={styles.points}>
 							{user?.correction_point} Ev.P
 						</Text>

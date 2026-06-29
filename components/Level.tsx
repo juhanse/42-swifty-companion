@@ -1,7 +1,7 @@
-import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { User } from '@/services/users';
+import { Colors } from '@/constants/colors';
 
 interface LevelProps {
 	user: User | null;
@@ -25,7 +25,7 @@ export const Level = ({ user }: LevelProps) => {
 
 			<View style={styles.progressBarBackground}>
 				<LinearGradient
-					colors={['#ACCB6F', '#97D581']}
+					colors={Colors.gradient}
 					start={{ x: 0, y: 0.5 }}
 					end={{ x: 1, y: 0.5 }}
 					style={[styles.progressBarFill, { width: `${progressPercentage}%` }]}
