@@ -19,7 +19,7 @@ export const Level = ({ user }: LevelProps) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.topRow}>
-				<Text style={styles.levelText}>Niveau : {majorLevel}</Text>
+				<Text style={styles.levelText}>Level : {majorLevel}</Text>
 				<Text style={styles.walletText}>₳ {user.wallet}</Text>
 			</View>
 

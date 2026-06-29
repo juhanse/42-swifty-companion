@@ -13,7 +13,7 @@ export const Projects = ({ projects }: ProjectsProps) => {
 
     return (
         <View style={styles.wrapper}>
-            <Text style={styles.title}>Projets :</Text>
+            <Text style={styles.title}>Projects :</Text>
             <FlatList
                 data={finishedProjects}
                 horizontal

@@ -1,38 +1,40 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { View, KeyboardAvoidingView, Text, TextInput, Platform, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/ui/Button'
-import { useQuery } from '@tanstack/react-query';
 import { fetchUser } from '@/services/users';
 import { Colors } from '@/constants/colors';
 
 export default function HomeScreen() {
 	const router = useRouter();
-	const { t } = useTranslation();
 	const [login, setLogin] = useState<string>('');
+	const [isFetching, setIsFetching] = useState<boolean>(false);
+	const [errorState, setErrorState] = useState<{ hasError: boolean, status?: number }>({ hasError: false });
 
-	const { refetch, isFetching, isError, error } = useQuery({
-		queryKey: ['userSearch', login.trim().toLowerCase()],
-		queryFn: () => fetchUser({ login: login.trim().toLowerCase() }),
-		enabled: false,
-		retry: false,
-	});
+	const handleSearch = async () => {
+		const cleanLogin = login.trim().toLowerCase();
+		if (cleanLogin.length < 3) return;
 
-    const handleSearch = async () => {
-        const cleanLogin = login.trim().toLowerCase();
-        if (cleanLogin.length < 3) return;
+		setIsFetching(true);
+		setErrorState({ hasError: false });
 
-        const { data, isSuccess } = await refetch();
+		try {
+			const data = await fetchUser({ login: cleanLogin });
 
-        if (isSuccess && data) {
-            router.push({ 
-                pathname: "/(tabs)/[id]", 
-                params: { id: data.login } 
-            });
-        }
-    };
+			router.push({
+				pathname: "/(tabs)/[id]",
+				params: { id: data.login }
+			});
+		} catch (error: any) {
+			setErrorState({
+				hasError: true,
+				status: error?.response?.status
+			});
+		} finally {
+			setIsFetching(false);
+		}
+	};
 
 	return (
 		<ScreenWrapper>
@@ -45,13 +47,13 @@ export default function HomeScreen() {
 
 				<View style={{ gap: 12 }}>
 					<Text style={styles.title}>
-						Identifiant :
+						Username :
 					</Text>
 					<View style={styles.textAera}>
 						<View style={styles.line} />
 						<TextInput
 							style={styles.input}
-							placeholder={t('search')}
+							placeholder="Search"
 							placeholderTextColor="rgba(162,162,162,0.5)"
 							value={login || ''}
 							onChangeText={setLogin}
@@ -62,30 +64,30 @@ export default function HomeScreen() {
 
 				<View style={{ flex: 1 }} />
 
-				{isError && (
+				{errorState.hasError && (
 					<Text style={styles.errorText}>
-						{(error as any)?.response?.status === 404 
-							? t('user_not_found') 
-							: t('api_error')}
+						{errorState.status === 404
+							? 'User not found'
+							: 'API error'}
 					</Text>
 				)}
 
 				<View style={{ marginBottom: 30 }}>
 					<Button type="primary" onPress={handleSearch} disabled={!login || login.length < 3} pending={isFetching}>
-						{t('search')}
+						Search
 					</Button>
 				</View>
 			</KeyboardAvoidingView>
 		</ScreenWrapper>
-    );
+	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-        justifyContent: 'space-between', 
-        paddingHorizontal: 20,
-        paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+		justifyContent: 'space-between',
+		paddingHorizontal: 20,
+		paddingBottom: Platform.OS === 'ios' ? 40 : 20,
 		backgroundColor: 'transparent',
 	},
 	textAera: {
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
 	},
 	errorText: {
 		fontSize: 20,
-        fontFamily: "SF-Medium",
-        color: Colors.red,
-    },
+		fontFamily: "SF-Medium",
+		color: Colors.red,
+	},
 });

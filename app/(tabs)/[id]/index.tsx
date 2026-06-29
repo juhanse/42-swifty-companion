@@ -1,24 +1,46 @@
-import { View, ActivityIndicator, Linking, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, ActivityIndicator, Linking, StyleSheet, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
 import { fetchUser } from '@/services/users'
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/ui/Button';
 import { Header } from '@/components/Header';
-import { useQuery } from '@tanstack/react-query';
 import { Level } from '@/components/Level';
 import { Projects } from '@/components/Projects';
+import Skills from '@/components/Skills';
+import { User } from '@/services/users';
 
 export default function ProfileScreen() {
-    const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
+    const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const { data: user, isLoading } = useQuery({
-        queryKey: ['userSearch', id.toLowerCase()],
-        queryFn: () => fetchUser({ login: id.toLowerCase() }),
-        staleTime: 1000 * 60 * 5,
-    });
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadUser = async () => {
+            try {
+                setIsLoading(true);
+                const data = await fetchUser({ login: id.toLowerCase() });
+                if (isMounted) {
+                    setUser(data);
+                }
+            } catch (error) {
+                console.error("Error when loading user:", error);
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        loadUser();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [id]);
 
     const handleOpenIntra = async () => {
         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
@@ -41,17 +63,18 @@ export default function ProfileScreen() {
 
     return (
         <ScreenWrapper>
-            <View style={styles.container}>
+            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
                 <View style={styles.mainContent}>
                     <Header user={user || null} />
                     <Level user={user || null} />
                     <Projects projects={user?.projects_users || []} />
+                    <Skills skills={user?.cursus_users?.[0].skills || []} />
                 </View>
 
-				<Button type="primary" onPress={handleOpenIntra}>
-					{t('open_profile')}
-				</Button>
-            </View>
+                <Button type="primary" onPress={handleOpenIntra}>
+                    Open profile
+                </Button>
+            </ScrollView>
         </ScreenWrapper>
     );
 }
@@ -59,8 +82,8 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+    },
+    contentContainer: {
         paddingTop: 60,
         paddingBottom: 40,
         paddingHorizontal: 20,
@@ -69,6 +92,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'stretch',
         gap: 20,
+        paddingBottom: 40,
     },
     center: {
         flex: 1,

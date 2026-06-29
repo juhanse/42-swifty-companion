@@ -23,7 +23,7 @@ export default function Skills({ skills }: SkillsProps) {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Compétences</Text>
+			<Text style={styles.title}>Skills</Text>
 			<View style={styles.skillsList}>
 				{sortedSkills.map((skill) => {
 					const percentage = Math.min((skill.level / MAX_LEVEL) * 100, 100);
