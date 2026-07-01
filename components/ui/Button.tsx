@@ -1,5 +1,14 @@
 import { ReactNode } from "react";
-import { Pressable, Text, ViewStyle, TextStyle, StyleSheet, ActivityIndicator } from "react-native";
+import {
+	Pressable,
+	Text,
+	View,
+	Image,
+	ViewStyle,
+	TextStyle,
+	StyleSheet,
+	ActivityIndicator,
+} from "react-native";
 
 type ButtonType = "primary" | "secondary" | "warning";
 
@@ -20,7 +29,7 @@ const Button = ({
 	style,
 	textStyle,
 	disabled = false,
-	pending = false
+	pending = false,
 }: ButtonProps) => {
 	const getBackgroundColor = (pressed: boolean) => {
 		switch (type) {
@@ -56,9 +65,18 @@ const Button = ({
 			{pending ? (
 				<ActivityIndicator color={getTextColor()} />
 			) : (
-				<Text style={[styles.text, { color: getTextColor() }, textStyle]}>
-					{children}
-				</Text>
+				<View style={styles.content}>
+					{type === "primary" && (
+						<Image
+							source={require("../../assets/images/42.png")}
+							style={styles.logo}
+							resizeMode="contain"
+						/>
+					)}
+					<Text style={[styles.text, { color: getTextColor() }, textStyle]}>
+						{children}
+					</Text>
+				</View>
 			)}
 		</Pressable>
 	);
@@ -66,7 +84,7 @@ const Button = ({
 
 const styles = StyleSheet.create({
 	base: {
-		width: '100%',
+		width: "100%",
 		height: 55,
 		borderRadius: 36,
 		paddingHorizontal: 20,
@@ -74,6 +92,16 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		alignSelf: "stretch",
+	},
+	content: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	logo: {
+		width: 22,
+		height: 22,
+		marginRight: 10,
 	},
 	text: {
 		fontFamily: "SF-Medium",
