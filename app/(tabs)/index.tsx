@@ -42,6 +42,7 @@ export default function HomeScreen() {
 				style={styles.container}
 				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 				keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 0}
+				enabled={Platform.OS !== 'web'}
 			>
 				<View style={{ flex: 1 }} />
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, ActivityIndicator, Linking, StyleSheet, ScrollView } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { fetchUser } from '@/services/users'
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/ui/Button';
@@ -11,6 +11,7 @@ import Skills from '@/components/Skills';
 import { User } from '@/services/users';
 
 export default function ProfileScreen() {
+    const router = useRouter();
     const { id } = useLocalSearchParams<{ id: string }>();
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -25,8 +26,15 @@ export default function ProfileScreen() {
                 if (isMounted) {
                     setUser(data);
                 }
-            } catch (error) {
-                console.error("Error when loading user:", error);
+            } catch (error: any) {
+                const isExpectedError = error?.response?.status === 404 || error?.message === 'Network Error';
+                if (!isExpectedError) {
+                    console.error("Error when loading user:", error);
+                }
+                
+                if (isMounted) {
+                    router.replace('/'); 
+                }
             } finally {
                 if (isMounted) {
                     setIsLoading(false);
@@ -39,7 +47,7 @@ export default function ProfileScreen() {
         return () => {
             isMounted = false;
         };
-    }, [id]);
+    }, [id, router]);
 
     const handleOpenIntra = async () => {
         const url = `https://intra.42.fr/users/${id}`;
@@ -57,6 +65,10 @@ export default function ProfileScreen() {
                 </View>
             </ScreenWrapper>
         );
+    }
+
+    if (!user) {
+        return null; 
     }
 
     return (
