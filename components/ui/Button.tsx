@@ -48,7 +48,7 @@ const Button = ({
 			disabled={disabled || pending}
 			style={({ pressed }) => [
 				styles.base,
-				styles.shadow,
+				{ boxShadow: "0px 4px 4px rgba(0,0,0,0.25)" },
 				{ backgroundColor: disabled ? "#afafafff" : getBackgroundColor(pressed) },
 				style,
 			]}
@@ -78,13 +78,6 @@ const styles = StyleSheet.create({
 	text: {
 		fontFamily: "SF-Medium",
 		fontSize: 20,
-	},
-	shadow: {
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 4,
 	},
 });
 
