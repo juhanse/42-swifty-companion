@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react';
 import { FlatList, View, StyleSheet, Text } from 'react-native';
 import { ProjectCard } from '@/components/ui/ProjectCard';
 import { ProjectUser } from '@/services/users';
@@ -7,9 +8,17 @@ interface ProjectsProps {
 }
 
 export const Projects = ({ projects }: ProjectsProps) => {
-    const finishedProjects = projects
-        .filter(p => p.status === 'finished')
-        .sort((a, b) => new Date(b.marked_at).getTime() - new Date(a.marked_at).getTime());
+    const finishedProjects = useMemo(() => {
+        return projects
+            .filter(p => p.status === 'finished')
+            .sort((a, b) => new Date(b.marked_at).getTime() - new Date(a.marked_at).getTime());
+    }, [projects]);
+
+    const getItemLayout = useCallback((data: any, index: number) => ({
+        length: 270, 
+        offset: 270 * index,
+        index,
+    }), []);
 
     return (
         <View style={styles.wrapper}>
@@ -17,6 +26,13 @@ export const Projects = ({ projects }: ProjectsProps) => {
             <FlatList
                 data={finishedProjects}
                 horizontal
+                initialNumToRender={3}
+                maxToRenderPerBatch={3}
+                windowSize={3}
+                getItemLayout={getItemLayout}
+                removeClippedSubviews={true}
+                scrollEventThrottle={16}
+                nestedScrollEnabled
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.listContent}

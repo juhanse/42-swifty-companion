@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ProjectUser } from '@/services/users';
@@ -7,7 +8,7 @@ interface ProjectCardProps {
     projectUser: ProjectUser;
 }
 
-export const ProjectCard = ({ projectUser }: ProjectCardProps) => {
+export const ProjectCard = memo(({ projectUser }: ProjectCardProps) => {
     const isSuccess = projectUser["validated?"];
 
     const formattedDate = new Date(projectUser.marked_at).toLocaleDateString('fr-FR', {
@@ -60,7 +61,7 @@ export const ProjectCard = ({ projectUser }: ProjectCardProps) => {
             </LinearGradient>
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     outerContainer: {
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     },
     date: {
         fontSize: 12,
-        fontFamily: "SF-Medimum",
+        fontFamily: "SF-Semibold",
         color: '#fff',
     },
     groupContainer: {
