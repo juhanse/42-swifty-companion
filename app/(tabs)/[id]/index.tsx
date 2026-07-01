@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, ActivityIndicator, Linking, StyleSheet, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import * as Haptics from 'expo-haptics';
 import { fetchUser } from '@/services/users'
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/ui/Button';
@@ -43,7 +42,6 @@ export default function ProfileScreen() {
     }, [id]);
 
     const handleOpenIntra = async () => {
-        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         const url = `https://intra.42.fr/users/${id}`;
         const supported = await Linking.canOpenURL(url);
         if (supported) {
