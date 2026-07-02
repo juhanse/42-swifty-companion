@@ -8,7 +8,6 @@
 
 * **Framework:** React Native with Expo 56
 * **Language:** TypeScript
-* **Data Fetching:** TanStack Query (Caching and server-state management)
 * **API Client:** Axios with centralized OAuth2 token management
 
 
