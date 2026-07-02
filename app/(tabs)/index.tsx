@@ -13,6 +13,8 @@ export default function HomeScreen() {
 	const [errorState, setErrorState] = useState<{ hasError: boolean, status?: number }>({ hasError: false });
 
 	const handleSearch = async () => {
+		if (isFetching) return;
+	
 		const cleanLogin = login.trim().toLowerCase();
 		if (cleanLogin.length < 3) return;
 
@@ -112,6 +114,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	input: {
+		width: "90%",
 		height: 50,
 		fontSize: 32,
 		fontFamily: 'SF-Semibold',
