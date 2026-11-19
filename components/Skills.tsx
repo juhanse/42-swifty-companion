@@ -1,16 +1,14 @@
-import { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withTiming,
-	withDelay,
 	Easing,
 } from 'react-native-reanimated';
 import { Colors } from '@/constants/colors';
 
-const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
 const MAX_LEVEL = 21;
 
 export interface Skill {
@@ -25,37 +23,43 @@ export interface SkillsProps {
 
 interface SkillProgressBarProps {
 	percentage: number;
-	index: number;
 	resetKey: string;
 }
 
-const SkillProgressBar = ({ percentage, index, resetKey }: SkillProgressBarProps) => {
-	const progress = useSharedValue(0);
+const SkillProgressBar = ({ percentage, resetKey }: SkillProgressBarProps) => {
+	const [trackWidth, setTrackWidth] = useState(0);
+	const animatedWidth = useSharedValue(0);
 
 	useEffect(() => {
-		progress.value = 0;
-		progress.value = withDelay(
-			Math.min(index * 50, 400),
-			withTiming(percentage / 100, {
-				duration: 700,
-				easing: Easing.out(Easing.cubic),
-			})
-		);
-	}, [resetKey, percentage, index, progress]);
+		const targetWidth = (trackWidth * percentage) / 100;
+		animatedWidth.value = 0;
+		animatedWidth.value = withTiming(targetWidth, {
+			duration: 700,
+			easing: Easing.out(Easing.cubic),
+		});
+	}, [trackWidth, percentage, resetKey, animatedWidth]);
 
 	const animatedFillStyle = useAnimatedStyle(() => ({
-		transform: [{ scaleX: progress.value }],
-		transformOrigin: 'left center',
+		width: animatedWidth.value,
 	}));
 
+	const handleLayout = (e: LayoutChangeEvent) => {
+		const width = e.nativeEvent.layout.width;
+		if (width > 0 && width !== trackWidth) {
+			setTrackWidth(width);
+		}
+	};
+
 	return (
-		<View style={styles.track}>
-			<AnimatedGradient
-				colors={Colors.gradient}
-				start={{ x: 0, y: 0.5 }}
-				end={{ x: 1, y: 0.5 }}
-				style={[styles.fill, animatedFillStyle]}
-			/>
+		<View style={styles.track} onLayout={handleLayout}>
+			<Animated.View style={[styles.fillClip, animatedFillStyle]}>
+				<LinearGradient
+					colors={Colors.gradient}
+					start={{ x: 0, y: 0.5 }}
+					end={{ x: 1, y: 0.5 }}
+					style={styles.fill}
+				/>
+			</Animated.View>
 		</View>
 	);
 };
@@ -72,7 +76,7 @@ export default function Skills({ skills }: SkillsProps) {
 		<View style={styles.container}>
 			<Text style={styles.title}>Skills</Text>
 			<View style={styles.skillsList}>
-				{sortedSkills.map((skill, index) => {
+				{sortedSkills.map((skill) => {
 					const percentage = Math.min(100, Math.max(0, (skill.level / MAX_LEVEL) * 100));
 
 					return (
@@ -87,7 +91,6 @@ export default function Skills({ skills }: SkillsProps) {
 							</View>
 							<SkillProgressBar
 								percentage={percentage}
-								index={index}
 								resetKey={resetKey}
 							/>
 						</View>
@@ -138,6 +141,10 @@ const styles = StyleSheet.create({
 		height: 10,
 		backgroundColor: '#333333',
 		borderRadius: 3,
+		overflow: 'hidden',
+	},
+	fillClip: {
+		height: '100%',
 		overflow: 'hidden',
 	},
 	fill: {

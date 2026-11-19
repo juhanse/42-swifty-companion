@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
 	useSharedValue,
@@ -10,31 +10,38 @@ import Animated, {
 import { User } from '@/services/users';
 import { Colors } from '@/constants/colors';
 
-const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
-
 interface LevelProps {
 	user: User | null;
 }
 
 export const Level = ({ user }: LevelProps) => {
+	const [trackWidth, setTrackWidth] = useState(0);
+
 	const level = user?.cursus_users?.[0]?.level ?? 0;
 	const majorLevel = Math.floor(level);
 	const progressPercentage = Math.min(100, Math.max(0, Math.round((level - majorLevel) * 100)));
 
-	const progress = useSharedValue(0);
+	const animatedWidth = useSharedValue(0);
 
 	useEffect(() => {
-		progress.value = 0;
-		progress.value = withTiming(progressPercentage / 100, {
+		const targetWidth = (trackWidth * progressPercentage) / 100;
+		animatedWidth.value = 0;
+		animatedWidth.value = withTiming(targetWidth, {
 			duration: 750,
 			easing: Easing.out(Easing.cubic),
 		});
-	}, [user?.login, progressPercentage, progress]);
+	}, [trackWidth, progressPercentage, user?.login, animatedWidth]);
 
 	const animatedFillStyle = useAnimatedStyle(() => ({
-		transform: [{ scaleX: progress.value }],
-		transformOrigin: 'left center',
+		width: animatedWidth.value,
 	}));
+
+	const handleLayout = (e: LayoutChangeEvent) => {
+		const width = e.nativeEvent.layout.width;
+		if (width > 0 && width !== trackWidth) {
+			setTrackWidth(width);
+		}
+	};
 
 	if (!user || !user.cursus_users?.[0]) {
 		return null;
@@ -47,13 +54,15 @@ export const Level = ({ user }: LevelProps) => {
 				<Text style={styles.walletText}>₳ {user.wallet}</Text>
 			</View>
 
-			<View style={styles.progressBarBackground}>
-				<AnimatedGradient
-					colors={Colors.gradient}
-					start={{ x: 0, y: 0.5 }}
-					end={{ x: 1, y: 0.5 }}
-					style={[styles.progressBarFill, animatedFillStyle]}
-				/>
+			<View style={styles.progressBarBackground} onLayout={handleLayout}>
+				<Animated.View style={[styles.progressBarClip, animatedFillStyle]}>
+					<LinearGradient
+						colors={Colors.gradient}
+						start={{ x: 0, y: 0.5 }}
+						end={{ x: 1, y: 0.5 }}
+						style={styles.progressBarFill}
+					/>
+				</Animated.View>
 			</View>
 		</View>
 	);
@@ -84,6 +93,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#F9F9F9',
 		borderRadius: 30,
 		boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
+		overflow: 'hidden',
+	},
+	progressBarClip: {
+		height: '100%',
 		overflow: 'hidden',
 	},
 	progressBarFill: {
