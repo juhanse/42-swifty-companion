@@ -26,8 +26,8 @@
 The application was fully designed in **Figma** prior to development to ensure visual consistency and an optimal user experience.
 
 <p>
-  <img src="https://imgur.com/HRUyS6Z.png" alt="view1" height="400" style="display:inline-block;">
-  <img src="https://imgur.com/MQ3wdp4.png" alt="view2" height="400" style="display:inline-block;">
+  <img src="./assets/images/home.png" alt="view1" height="400" style="display:inline-block;">
+  <img src="./assets/images/profile.png" alt="view2" height="400" style="display:inline-block;">
 </p>
 
 
@@ -48,8 +48,8 @@ The application was fully designed in **Figma** prior to development to ensure v
 ## 💻 Installation
 
 1. Clone the repository: `git clone https://github.com/juhanse/42-swifty-companion`
-2. Install dependencies: `npx expo install`
+2. Install dependencies: `npm install`
 3. Set up your `.env` file with your 42 API `UID` and `SECRET`, as shown in the `.env.example` file
-4. Start the project: `npx expo start`
+4. Start the project: `npm run start`
 
 In compliance with the subject's security requirements, all credentials and API keys are stored locally in an `.env` file and ignored by Git.
