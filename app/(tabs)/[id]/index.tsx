@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { View, ActivityIndicator, Linking, StyleSheet, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { fetchUser } from '@/services/users'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { fetchUser, User } from '@/services/users';
 import { ScreenWrapper } from '@/components/ScreenWrapper';
 import Button from '@/components/ui/Button';
 import { Header } from '@/components/Header';
 import { Level } from '@/components/Level';
 import { Projects } from '@/components/Projects';
 import Skills from '@/components/Skills';
-import { User } from '@/services/users';
 
 export default function ProfileScreen() {
     const router = useRouter();
     const { id } = useLocalSearchParams<{ id: string }>();
+    const insets = useSafeAreaInsets();
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -29,11 +30,11 @@ export default function ProfileScreen() {
             } catch (error: any) {
                 const isExpectedError = error?.response?.status === 404 || error?.message === 'Network Error';
                 if (!isExpectedError) {
-                    console.error("Error when loading user:", error);
+                    console.error('Error when loading user:', error);
                 }
-                
+
                 if (isMounted) {
-                    router.replace('/'); 
+                    router.replace('/');
                 }
             } finally {
                 if (isMounted) {
@@ -68,41 +69,65 @@ export default function ProfileScreen() {
     }
 
     if (!user) {
-        return null; 
+        return null;
     }
 
     return (
         <ScreenWrapper>
-            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-                <View style={styles.mainContent}>
-                    <Header user={user || null} />
-                    <Level user={user || null} />
-                    <Projects projects={user?.projects_users || []} />
-                    <Skills skills={user?.cursus_users?.[0].skills || []} />
-                </View>
+            <View style={styles.screen}>
+                <ScrollView
+                    style={styles.container}
+                    contentContainerStyle={[
+                        styles.contentContainer,
+                        { paddingBottom: 100 + insets.bottom },
+                    ]}
+                >
+                    <View style={styles.mainContent}>
+                        <Header user={user} />
+                        <Level user={user} />
+                        <Projects projects={user?.projects_users || []} />
+                        <Skills skills={user?.cursus_users?.[0]?.skills || []} />
+                    </View>
+                </ScrollView>
 
-                <Button type="primary" onPress={handleOpenIntra}>
-                    Open profile
-                </Button>
-            </ScrollView>
+                <View
+                    style={[
+                        styles.floatingButtonContainer,
+                        { paddingBottom: Math.max(insets.bottom, 16) },
+                    ]}
+                >
+                    <Button type="primary" onPress={handleOpenIntra}>
+                        Open profile
+                    </Button>
+                </View>
+            </View>
         </ScreenWrapper>
     );
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        position: 'relative',
+    },
     container: {
         flex: 1,
     },
     contentContainer: {
         paddingTop: 60,
-        paddingBottom: 40,
         paddingHorizontal: 20,
     },
     mainContent: {
         flexDirection: 'column',
         alignItems: 'stretch',
         gap: 20,
-        paddingBottom: 40,
+    },
+    floatingButtonContainer: {
+        position: 'absolute',
+        left: 20,
+        right: 20,
+        bottom: 0,
+        zIndex: 10,
     },
     center: {
         flex: 1,
