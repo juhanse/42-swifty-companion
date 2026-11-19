@@ -2,11 +2,11 @@
 
 ## 📝 Project Overview
 
-**Swifty Companion** is a mobile application developed as part of the 42 school curriculum. The goal is to build an interface that retrieves and displays detailed information about 42 students using the **42 API**. The app focuses on seamless navigation, real-time data fetching, and a modern UI that adapts to various screen sizes.
+**Swifty Companion** is a mobile app that retrieves and displays detailed information about students at 42 using the **42 API**. The app focuses on smooth navigation, real-time data retrieval and a modern user interface that adapts to different screen sizes.
 
 ## 🛠 Tech Stack
 
-* **Framework:** React Native with Expo 56
+* **Framework:** React Native with Expo 58
 * **Language:** TypeScript
 * **API Client:** Axios with centralized OAuth2 token management
 
@@ -15,7 +15,6 @@
 
 * **OAuth2 Authentication:** Implementation of the `client_credentials` flow to communicate securely with the 42 API
 * **Atomic Architecture:** Breakdown of the UI into reusable components (Badge, Level, ProjectCard, etc.)
-* **State & Cache Management:** Optimized performance and reduced API calls using TanStack Query
 * **Responsive Design:** Flexible layouts ensuring the interface displays correctly on different mobile platforms
 * **Error Handling:** Comprehensive management of edge cases, including "login not found," network issues, and API rate limits
 
