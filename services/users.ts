@@ -22,7 +22,13 @@ export type User = {
 	url: string,
 	displayname: string,
 	image: {
-		link: string
+		link: string,
+		versions?: {
+			large?: string;
+			medium?: string;
+			small?: string;
+			micro?: string;
+		};
 	},
 	correction_point: number,
 	wallet: number,

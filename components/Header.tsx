@@ -11,6 +11,7 @@ interface HeaderProps {
 export const Header = ({ user }: HeaderProps) => {
 	const router = useRouter();
 	const primaryGroup = user?.groups?.[0]?.name;
+	const avatarUri = user?.image?.versions?.medium || user?.image?.versions?.small || user?.image?.link;
 
 	return (
 		<View>
@@ -26,7 +27,7 @@ export const Header = ({ user }: HeaderProps) => {
 
 			<View style={styles.container}>
 				<Image
-					source={{ uri: user?.image.link }}
+					source={avatarUri ? { uri: avatarUri } : undefined}
 					style={styles.avatar}
 				/>
 
